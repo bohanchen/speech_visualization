@@ -67,7 +67,7 @@ function draw() {
 
     for (var i = 0; i < result_count.length; i++) {
         frameRate(0.5)
-        fill(118, 144, 113, 100);
+        fill(118, 144, 113, 30);
         noStroke();
         ellipse(random(width), random(height), result_count[i] * 20, result_count[i] * 20);
         fill(0,0,0)
