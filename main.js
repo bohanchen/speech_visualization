@@ -7,8 +7,8 @@ speechRec.interimResults = false
 let word = "";
 let value = []
 let res;
-let result_word = [1];
-let result_count = [1];
+let result_word = ["I'm Listening"];
+let result_count = [3];
 let json = {}
 
 function setup() {
