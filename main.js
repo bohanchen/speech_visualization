@@ -45,6 +45,13 @@ function setup() {
         result = finder(res);
         result_word = result[0]
         result_count = result[1]
+        
+        var obj = {};
+        for (var i = 0; i < result_word.length; i++) {
+           obj[result_word[i]] = result_count[i];
+        }
+        
+        print(obj)
 
     }
 
