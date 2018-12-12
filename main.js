@@ -1,75 +1,83 @@
-
-let lang ='en-US';
+let lang = 'en-US';
 let speechRec = new p5.SpeechRec(lang);
 
 speechRec.continuous = true; // do continuous recognition
 speechRec.interimResults = false
 
-let word = [];
-let value;
-let count;
-let x, y;
+let word = "";
+let value = []
+let res;
+let result_word = [1];
+let result_count = [1];
+let json = {}
 
-function setup(){
-    createCanvas(500,500);
-    background(20, 51, 100);
+function setup() {
+    createCanvas(window.innerWidth, window.innerHeight);
+    background(0, 255, 255);
     speechRec.onResult = gotSpeech
     speechRec.start();
-    
-    function gotSpeech(){
-       if(speechRec.resultValue){
-//           createP(speechRec.resultString);
-        value=speechRec.resultString;
-        append(word, value)           
-//        append(word, splitTokens(value,' '))
-        
-//        print(word)
-           
-//        for (let i = 0; i<word.length; i++){
-//            print(word[i]);
-//        }
-           
-        var search = 'like';
-        for (var i = 0; i<word.length; i++){
-            var splitwords = split(word[i], ' ')
+
+    function gotSpeech() {
+        if (speechRec.resultValue == true) {      
+            value = speechRec.resultString;
         }
-        splitwords.sort();
-        var cnt = 0;
-        var current = null;
-           
-        for (let i = 0; i<splitwords.length; i++){
-            if(splitwords[i] != current){
-                if (cnt > 0) {
-                    createP(current + ': ' + cnt + ' times<br>');
+        word += value + ' '
+        res = splitTokens(word, " ");
+
+        function finder(res) {
+            var name = [],
+                val = [],
+                prev;
+            res.sort();
+            for (var i = 0; i < res.length; i++) {
+                if (res[i] !== prev) {
+                    name.push(res[i]);
+                    val.push(1);
+                } else {
+                    val[val.length - 1]++;
                 }
-                current = splitwords[i];
-                cnt = 1;
+                prev = res[i];
             }
-            else {
-                cnt++;
-            }
+            return [name, val];
         }
-        if (cnt > 0) {
-        createP(current + ': '+cnt + ' times');
-            
-        x = random(40)
-        print(x)
-        y = random(50)
-        print(y)
+        
+
+        result = finder(res);
+        result_word = result[0]
+        result_count = result[1]
+
     }
+
+    //set up my circles object
+
+}
+//console.log(result)
 
 //
-        print(splitwords)
-        count = splitwords.reduce(function(n, val) {
-            return n + (val === search);
-        }, 0);
-        console.log(count);
-       }
+function draw() {
+
+    background(255, 255, 255);
+
+    for (var i = 0; i < result_count.length; i++) {
+        frameRate(0.5)
+        fill(118, 144, 113, 100);
+        noStroke();
+        ellipse(random(width), random(height), result_count[i] * 20, result_count[i] * 20);
+        fill(0,0,0)
+        textSize(result_count[i] * 10);
+        text(result_word[i], random(width),random(height));
     }
+    
+//    pieChart(150, result_count);
+
 }
 
-function draw(){
-    background(20, 51, 100);
-    ellipse(x*30, y*50, count*10, count*10)
-    
+function pieChart(diameter, data) {
+  var lastAngle = 0;
+  for (var i = 0; i < data.length; i++) {
+    var color = map(i, 0, data.length, 0, 255);
+    fill(color);
+    arc(width/2, height/2, diameter, diameter, lastAngle, lastAngle+radians(result_count[i]));
+    lastAngle += radians(result_count[i]);
+  }
 }
